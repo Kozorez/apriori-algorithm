@@ -13,6 +13,7 @@ def generateAssociationRulesFromFrequentItemsets(dataset, itemset, min_conf):
 	Return an item, if its confidence is greater than min_conf
 	(min_conf must be between 0 and 100 inclusive).
 	"""
+
 	associations = {}
 	for item in itemset:
 		for subset in _subsets(item):
@@ -28,8 +29,9 @@ def generateAssociationRulesFromFrequentItemsets(dataset, itemset, min_conf):
 			if set(association[0]) <= set(items):
 				left += 1
 
-		if left_then_right / left >= min_conf / 100:
-			associations[association] = left_then_right / left
+		conf = left_then_right / left
+		if conf >= min_conf / 100:
+			associations[association] = conf
 		else:
 			associations[association] = None
 	
@@ -50,7 +52,7 @@ def _subsets(item):
     else:
         yield ()
 
-def generateAssociationRules(dataset, min_sup, min_conf):
+def generateAssociationRulesFromDataset(dataset, min_sup, min_conf):
 	"""
 	Abstract process of strong association rules mining 
 	to internally include step of frequent itemset mining from dataset.
@@ -59,6 +61,7 @@ def generateAssociationRules(dataset, min_sup, min_conf):
 	and if its confidence is greater than min_conf
 	(min_conf must be between 0 and 100 inclusive).
 	"""
+	
 	frequentItemsets = apriori.generateFrequentItemset(dataset, min_sup)
 
 	associationRules = generateAssociationRulesFromFrequentItemsets(dataset, frequentItemsets, min_conf)

@@ -10,6 +10,7 @@ def generateFrequentItemset(dataset, min_sup):
 	Return an item, if its support is greater than min_sup 
 	(min_sup must be not greater than number of records in the dataset).
 	"""
+	
 	itemset = {}
 
 	for values in dataset.values():
@@ -23,38 +24,34 @@ def generateFrequentItemset(dataset, min_sup):
 
 	level = 1
 	while itemset:
-		prevItemset = itemset
+		previousItemset = itemset
 
 		itemset = _generateCandidates(itemset, level)
-		itemset = _scanDataset(dataset, itemset)
+		itemset = _computeCandidatesSupport(dataset, itemset)
 		itemset = _pruneCandidates(itemset, min_sup)
 
 		level += 1
 	else:
 		if level > 1:
-			itemset = prevItemset
+			itemset = previousItemset
 
-	result = {}
-	
-	for item in itemset:
-		result[item] = itemset[item]
-
-	return result
+	return itemset
 
 def _generateCandidates(L, k):
 	C = {}
+
 	for i in L:
 		for j in L:
 			if i < j:
 				union = set(i) | set(j)
 				if len(union) == k + 1:
 					union = tuple(sorted(union))
-					if _check(L, union):
+					if _checkAprioriProperty(L, union):
 						C[union] = 0
 
 	return C
 
-def _check(L, union):
+def _checkAprioriProperty(L, union):
 	for i in range(len(union)):
 		subset = union[:i] + union[i + 1:]
 		if subset not in L:
@@ -62,7 +59,7 @@ def _check(L, union):
 	else:
 		return True
 
-def _scanDataset(dataset, C):
+def _computeCandidatesSupport(dataset, C):
 	for i in C:
 		for j in dataset.values():
 			if set(i) <= set(j):
@@ -72,6 +69,7 @@ def _scanDataset(dataset, C):
 
 def _pruneCandidates(C, min_sup):
 	res = {}
+
 	for key in C:
 		if C[key] >= min_sup:
 			res[key] = C[key]
