@@ -1,4 +1,15 @@
+"""
+File: apriori.py
+Module provides utilities for analysis of transactional database records
+in order to find frequent itemsets and derived strong association rules.
+"""
+
 def generateFrequentItemset(dataset, min_sup):
+	"""
+	Generate frequent itemsets from record in dataset.
+	Return only items, which support is greater than argument
+	min_sup (min_sup is less than dataset length).
+	"""
 	itemset = {}
 
 	for values in dataset.values():
