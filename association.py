@@ -2,7 +2,7 @@
 File: association.py
 Module provides utilities for generating strong association rules
 from frequent itemsets. Uses module apriori to find frequent itemsets
-from transactional database.
+from transactional database records.
 """
 
 import apriori
@@ -10,8 +10,8 @@ import apriori
 def generateAssociationRulesFromFrequentItemsets(dataset, itemset, min_conf):
 	"""
 	Generate strong association rules from itemset.
-	Return only items, which confidence is greater than argument
-	min_conf (min_conf is between 0 and 100).
+	Return an item, if its confidence is greater than min_conf
+	(min_conf must be between 0 and 100 inclusive).
 	"""
 	associations = {}
 	for item in itemset:
@@ -53,11 +53,11 @@ def _subsets(item):
 def generateAssociationRules(dataset, min_sup, min_conf):
 	"""
 	Abstract process of strong association rules mining 
-	to include step of frequent itemset mining from dataset.
-	Return only items, which support is greater than argument
-	min_sup (min_sup <= len(dataset)) 
-	and which confidence is greater than argument
-	min_conf (min_conf is between 0 and 100).
+	to internally include step of frequent itemset mining from dataset.
+	Return an item, if its support is greater than min_sup 
+	(min_sup must be not greater than number of records in the dataset).
+	and if its confidence is greater than min_conf
+	(min_conf must be between 0 and 100 inclusive).
 	"""
 	frequentItemsets = apriori.generateFrequentItemset(dataset, min_sup)
 
